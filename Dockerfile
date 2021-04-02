@@ -1,4 +1,4 @@
-FROM p4lang/p4c:latest
+FROM jaxa/p4c-epoch
 MAINTAINER Seth Fowler <seth@barefootnetworks.com>
 MAINTAINER Robert Soule <robert.soule@barefootnetworks.com>
 
@@ -12,7 +12,8 @@ ENV NET_TOOLS iputils-arping \
               python-scapy \
               tcpdump \
               traceroute \
-              tshark
+              tshark \
+              bridge-utils
 ENV MININET_DEPS automake \
                  build-essential \
                  cgroup-bin \
@@ -47,10 +48,10 @@ RUN mv /usr/sbin/tcpdump /usr/bin/tcpdump
 # Install mininet.
 COPY docker/third-party/mininet /third-party/mininet
 WORKDIR /third-party/mininet
-RUN cp util/m /usr/local/bin/m
+RUN cp mininet/util/m /usr/local/bin/m
 RUN make install && \
     rm -rf /third-party/mininet
-
+RUN pip install influxdb
 # Install the scripts we use to run and test P4 apps.
 COPY docker/scripts /scripts
 WORKDIR /scripts
