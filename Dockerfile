@@ -8,8 +8,8 @@ ENV NET_TOOLS iputils-arping \
               iputils-tracepath \
               net-tools \
               nmap \
-              python-ipaddr \
-              python-scapy \
+              python3-pip \
+              python3-dev \
               tcpdump \
               traceroute \
               tshark \
@@ -33,25 +33,26 @@ ENV MININET_DEPS automake \
                  pep8 \
                  pyflakes \
                  pylint \
-                 python-pexpect \
-                 python-setuptools
+                 python3-pexpect \
+                 python3-setuptools
 
 # Ignore questions when installing with apt-get:
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends $NET_TOOLS $MININET_DEPS
+    apt-get install -y -o Dpkg::Options::='--force-confdef' --no-install-recommends $NET_TOOLS $MININET_DEPS
 
 # Fix to get tcpdump working
 RUN mv /usr/sbin/tcpdump /usr/bin/tcpdump
 
+RUN pip install ipaddr scapy psutil
+RUN pip install influxdb
 # Install mininet.
 COPY docker/third-party/mininet /third-party/mininet
 WORKDIR /third-party/mininet
-RUN cp mininet/util/m /usr/local/bin/m
+RUN cp util/m /usr/local/bin/m
 RUN make install && \
     rm -rf /third-party/mininet
-RUN pip install influxdb
 # Install the scripts we use to run and test P4 apps.
 COPY docker/scripts /scripts
 WORKDIR /scripts
