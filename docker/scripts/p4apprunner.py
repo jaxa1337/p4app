@@ -72,10 +72,6 @@ def read_manifest(manifest_file):
     language = manifest['language']
 
     if 'targets' not in manifest or len(manifest['targets']) < 1:
-        log_error('No targets defined in manifest.')
-        sys.exit(1)
-
-    if args.target is not None:
         chosen_target = args.target
     elif 'default-target' in manifest:
         chosen_target = manifest['default-target']
@@ -191,7 +187,7 @@ def run_mininet(manifest):
     switch_args.append('--json "%s"' % output_file)
 
     program = '"%s/mininet/single_switch_mininet.py"' % sys.path[0]
-    return run_command('python2 %s %s' % (program, ' '.join(switch_args)))
+    return run_command('python3 %s %s' % (program, ' '.join(switch_args)))
 
 def build_only(manifest):
 
@@ -237,7 +233,7 @@ def run_multiswitch(manifest):
     script_args.append('--json "%s"' % json_file)
 
     program = '"%s/mininet/multi_switch_mininet.py"' % sys.path[0]
-    return run_command('python2 %s %s' % (program, ' '.join(script_args)))
+    return run_command('python3 %s %s' % (program, ' '.join(script_args)))
 
 def run_stf(manifest):
     output_file = run_compile_bmv2(manifest)
@@ -254,7 +250,7 @@ def run_stf(manifest):
     stf_args.append(os.path.join(args.build_dir, stf_file))
 
     program = '"%s/stf/bmv2stf.py"' % sys.path[0]
-    rv = run_command('python2 %s %s' % (program, ' '.join(stf_args)))
+    rv = run_command('python3 %s %s' % (program, ' '.join(stf_args)))
     if rv != 0:
         sys.exit(1)
     return rv
@@ -270,7 +266,7 @@ def run_custom(manifest):
          log_error('No mininet program file provided.')
          sys.exit(1)
     program = manifest.target_config['program']
-    rv = run_command('%s python2 %s %s' % (python_path, program, ' '.join(script_args)))
+    rv = run_command('%s python3 %s %s' % (python_path, program, ' '.join(script_args)))
 
     if rv != 0:
         sys.exit(1)
