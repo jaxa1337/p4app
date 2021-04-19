@@ -47,6 +47,7 @@ RUN mv /usr/sbin/tcpdump /usr/bin/tcpdump
 
 RUN pip install ipaddr scapy psutil
 RUN pip install influxdb
+RUN apt-get install -y nano
 # Install mininet.
 COPY docker/third-party/mininet /third-party/mininet
 WORKDIR /third-party/mininet
